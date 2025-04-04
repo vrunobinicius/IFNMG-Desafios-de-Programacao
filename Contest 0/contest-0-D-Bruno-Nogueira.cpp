@@ -4,48 +4,49 @@
 
 using namespace std;
 
-vector<bool> findPrimes(long long L, long long R)
+#define MAXN 1000000000
+
+int main(int argc, char const *argv[])
 {
     vector<long long> primes;
-    long long sqrtR = ceil(sqrt(R));
-    vector<bool> mark(sqrtR + 1, false);
-    vector<bool> isPrime(R - L + 1, true);
-    for (long long i = L; i <= sqrtR; i++)
+    long long lim = sqrt(MAXN);
+    vector<bool> mark(lim + 1, false);
+    for (long long i = 2; i <= lim; i++)
     {
         if (!mark[i])
         {
             primes.emplace_back(i);
-            for (int j = i * i; j <= sqrtR; j += i)
+            for (int j = i * i; j <= lim; j += i)
                 mark[j] = true;
         }
+    }
 
+    int t;
+    cin >> t;
+
+    while (t--)
+    {
+        long long n, m;
+        cin >> n >> m;
+
+        vector<bool> isPrime(m - n + 1, true);
         for (long long i : primes)
         {
-            for (long long j = max(i * i, (L + i - 1) / i * i); j <= R; j += i)
-                isPrime[j] = false;
+            for (long long j = max(i * i, (n + i - 1) / i * i); j <= m; j += i)
+                isPrime[j - n] = false;
+        }
 
-            if (L == 1)
+        if (n == 1)
+            isPrime[0] = false;
+
+        for (int i = 0; i < isPrime.size(); i++)
+        {
+            if (isPrime[i])
             {
-                isPrime[0] = isPrime[1] = false;
+                cout << i + n << "\n";
             }
         }
+        cout << "\n";
     }
-
-    return isPrime;
-}
-
-int main(int argc, char const *argv[])
-{
-
-    auto isPrime = findPrimes(3, 5);
-
-    for (int i = 0; i < isPrime.size(); i++)
-    {
-        if (isPrime[i])
-        {
-            cout << i << " ";
-        }
-    }
-
     return 0;
 }
