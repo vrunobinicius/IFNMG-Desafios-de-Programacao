@@ -6,7 +6,6 @@ using namespace std;
 
 int main()
 {
-
     int t;
     cin >> t;
 
@@ -18,11 +17,12 @@ int main()
         int a, b, f, g;
         cin >> a >> b >> f >> g;
 
-        int cableOnFloorMin = min(a, b);
-        int cableOnCeilingMin = min(f, g);
-        int cableOnWallMin = h;
+        int lengthCableInW = abs(w - a) + h + abs(w - f) + abs(b - g);
+        int lengthCableInWReverse = a + h + f + abs(b - g);
+        int lengthCableInD = abs(d - b) + h + abs(d - g) + abs(a - f);
+        int lengthCableInDReverse = b + h + g + abs(a - f);
 
-        cout << "cableOnFloorMin: " << cableOnFloorMin << " cableOnWallMin: " << cableOnWallMin << " cableOnCeilingMin: " << cableOnCeilingMin << "\n";
+        cout << min(min(lengthCableInW, lengthCableInWReverse), min(lengthCableInD, lengthCableInDReverse)) << "\n";
     }
 
     return 0;
