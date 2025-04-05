@@ -1,3 +1,5 @@
+// https://vjudge.net/contest/706892#problem/F
+
 #include <bits/stdc++.h>
 
 using namespace std;
