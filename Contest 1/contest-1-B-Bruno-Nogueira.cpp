@@ -1,8 +1,11 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
-int main()
+vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+int main(int argc, char const *argv[])
 {
+
     int t;
     cin >> t;
 
@@ -12,70 +15,50 @@ int main()
         cin >> n >> m;
 
         vector<string> grid(n);
-
         for (int i = 0; i < n; i++)
         {
-            string letters;
-            cin >> letters;
-            transform(letters.begin(), letters.end(), letters.begin(), ::toupper);
-            grid[i] = letters;
+            cin >> grid[i];
+            transform(grid[i].begin(), grid[i].end(), grid[i].begin(), ::toupper);
         }
 
-        vector<pair<int, int>> locations;
         int k;
         cin >> k;
-        for (int i = 0; i < k; i++)
+        while (k--)
         {
             string word;
             cin >> word;
             transform(word.begin(), word.end(), word.begin(), ::toupper);
+            bool found = false;
 
-            char start_char = word[0];
-            for (int j = 0; j < n; j++)
+            for (int i = 0; i < n && !found; i++)
             {
-                for (int l = 0; l < m; l++)
+                for (int j = 0; j < m && !found; j++)
                 {
-                    if (start_char == grid[j][l])
+                    for (auto direction : directions)
                     {
-                        int row_initial_search = j;
-                        int col_initial_search = l;
-                        if ((m - l) >= word.size())
+                        int row = i, column = j, current = 0;
+                        while (current < word.size())
                         {
-                            string substring = grid[j].substr(l, word.size());
-                            if (substring == word)
-                            {
-                                locations.push_back(make_pair(j + 1, l + 1));
-                            }
+                            if (row < 0 || column < 0 || row >= n || column >= m || grid[row][column] != word[current])
+                                break;
+
+                            if (++current == word.size())
+                                found = true;
+
+                            row += direction.first;
+                            column += direction.second;
                         }
-                        if ((m - l) >= word.size() && (j + l) <= word.size())
+                        if (found)
                         {
-                            int size_word = word.size();
-                            string substring = "";
-                            for (int o = 0; o < word.size(); o++)
-                            {
-                                if (word[o] != grid[row_initial_search][col_initial_search])
-                                    break;
-
-                                substring += grid[row_initial_search][col_initial_search];
-                                row_initial_search++;
-                                col_initial_search++;
-                            }
-
-                            if (substring == word)
-                            {
-                                locations.push_back(make_pair(j + 1, l + 1));
-                            }
+                            cout << i + 1 << " " << j + 1 << "\n";
+                            break;
                         }
                     }
                 }
             }
         }
-
-        for (int p = 0; p < locations.size(); p++)
-        {
-            cout << locations[p].first << " " << locations[p].second << "\n";
-        }
-        cout << "\n";
+        if (t)
+            cout << "\n";
     }
 
     return 0;
