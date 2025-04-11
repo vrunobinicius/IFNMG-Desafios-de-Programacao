@@ -7,8 +7,9 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
     string x, y;
-    while (cin >> x >> y)
+    while (getline(cin, x))
     {
+        getline(cin, y);
         vector<int> frequenceA(26, 0);
         vector<int> frequenceB(26, 0);
         string result = "";
@@ -25,10 +26,7 @@ int main(int argc, char const *argv[])
             result.append(minimun, 'a' + i);
         }
 
-        if (result != "")
-        {
-            cout << result << "\n";
-        }
+        cout << result << "\n";
     }
     return 0;
 }
