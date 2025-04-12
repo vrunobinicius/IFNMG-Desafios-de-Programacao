@@ -1,3 +1,5 @@
+// https://vjudge.net/contest/707365#problem/D
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -10,6 +12,7 @@ int main(int argc, char const *argv[])
     cin >> t;
     cin.ignore();
 
+    bool firstCase = true;
     while (t--)
     {
         string phrase;
@@ -22,9 +25,46 @@ int main(int argc, char const *argv[])
             setOfPhrases.push_back(phrase);
         }
 
+        if (!firstCase)
+            cout << "\n";
+        firstCase = false;
+
         int phraseIndex = 0;
-        while (phraseIndex < setOfPhrases.size() && setOfPhrases[phraseIndex].size() != decryptedPlaintext.size())
+        while (phraseIndex < setOfPhrases.size())
+        {
+            if (setOfPhrases[phraseIndex].size() == decryptedPlaintext.size())
+            {
+                vector<string> wordsInPhrase, wordsInDecrypted;
+                istringstream phraseStream(setOfPhrases[phraseIndex]), decryptedStream(decryptedPlaintext);
+                string word;
+
+                while (phraseStream >> word)
+                    wordsInPhrase.push_back(word);
+                while (decryptedStream >> word)
+                    wordsInDecrypted.push_back(word);
+
+                bool hasSameStructure = true;
+                if (wordsInPhrase.size() == wordsInDecrypted.size())
+                {
+                    for (int i = 0; i < wordsInPhrase.size(); i++)
+                    {
+                        if (wordsInPhrase[i].size() != wordsInDecrypted[i].size())
+                        {
+                            hasSameStructure = false;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    hasSameStructure = false;
+                }
+
+                if (hasSameStructure)
+                    break;
+            }
             phraseIndex++;
+        }
 
         if (phraseIndex == setOfPhrases.size())
         {
