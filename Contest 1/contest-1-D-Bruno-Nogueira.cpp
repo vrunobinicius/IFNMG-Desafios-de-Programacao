@@ -47,7 +47,10 @@ int main(int argc, char const *argv[])
                 }
 
                 if (!hasSameStructure)
-                    break;
+                {
+                    phraseIndex++;
+                    continue;
+                }
 
                 map<char, char> tempMapCharacters;
                 set<char> usedChars;
