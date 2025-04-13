@@ -7,12 +7,12 @@ using namespace std;
 int main(int argc, char const *argv[])
 {
 
-    string decryptedPlaintext = "the quick brown fox jumps over the lazy dog";
+    string decryptedPlaintext = "the quick brown fox jumps over the lazy dog", blankline;
     int t;
     cin >> t;
     cin.ignore();
+    getline(cin, blankline);
 
-    bool firstCase = true;
     while (t--)
     {
         string phrase;
@@ -25,10 +25,6 @@ int main(int argc, char const *argv[])
             setOfPhrases.push_back(phrase);
         }
 
-        if (!firstCase)
-            cout << "\n";
-        firstCase = false;
-
         int phraseIndex = 0;
         while (phraseIndex < setOfPhrases.size())
         {
@@ -36,32 +32,60 @@ int main(int argc, char const *argv[])
             {
                 vector<string> wordsInPhrase, wordsInDecrypted;
                 istringstream phraseStream(setOfPhrases[phraseIndex]), decryptedStream(decryptedPlaintext);
-                string word;
-
-                while (phraseStream >> word)
-                    wordsInPhrase.push_back(word);
-                while (decryptedStream >> word)
-                    wordsInDecrypted.push_back(word);
+                string wordInPhrase, wordInDecrypted;
 
                 bool hasSameStructure = true;
-                if (wordsInPhrase.size() == wordsInDecrypted.size())
+                while (phraseStream >> wordInPhrase && decryptedStream >> wordInDecrypted)
                 {
-                    for (int i = 0; i < wordsInPhrase.size(); i++)
+                    if (wordInPhrase.size() != wordInDecrypted.size())
                     {
-                        if (wordsInPhrase[i].size() != wordsInDecrypted[i].size())
+                        hasSameStructure = false;
+                        break;
+                    }
+                    wordsInPhrase.push_back(wordInPhrase);
+                    wordsInDecrypted.push_back(wordInDecrypted);
+                }
+
+                if (!hasSameStructure)
+                    break;
+
+                map<char, char> tempMapCharacters;
+                set<char> usedChars;
+                bool isValidMapping = true;
+
+                for (int i = 0; i < decryptedPlaintext.size(); i++)
+                {
+                    char currentCharPhrase = setOfPhrases[phraseIndex][i];
+                    char currentCharDecrypted = decryptedPlaintext[i];
+
+                    if (currentCharPhrase == ' ')
+                        continue;
+
+                    if (tempMapCharacters.count(currentCharPhrase))
+                    {
+                        if (tempMapCharacters[currentCharPhrase] != currentCharDecrypted)
                         {
-                            hasSameStructure = false;
+                            isValidMapping = false;
                             break;
                         }
                     }
-                }
-                else
-                {
-                    hasSameStructure = false;
+                    else
+                    {
+                        if (usedChars.count(currentCharDecrypted))
+                        {
+                            isValidMapping = false;
+                            break;
+                        }
+                        tempMapCharacters[currentCharPhrase] = currentCharDecrypted;
+                        usedChars.insert(currentCharDecrypted);
+                    }
                 }
 
-                if (hasSameStructure)
+                if (isValidMapping)
+                {
+                    mapCharacters = tempMapCharacters;
                     break;
+                }
             }
             phraseIndex++;
         }
@@ -72,14 +96,6 @@ int main(int argc, char const *argv[])
         }
         else
         {
-
-            for (int i = 0; i < decryptedPlaintext.size(); i++)
-            {
-                if (setOfPhrases[phraseIndex][i] == ' ')
-                    continue;
-                mapCharacters[setOfPhrases[phraseIndex][i]] = decryptedPlaintext[i];
-            }
-
             for (int i = 0; i < setOfPhrases.size(); i++)
             {
                 for (int j = 0; j < setOfPhrases[i].size(); j++)
@@ -94,6 +110,8 @@ int main(int argc, char const *argv[])
                 cout << "\n";
             }
         }
+        if (t > 0)
+            cout << "\n";
     }
 
     return 0;
